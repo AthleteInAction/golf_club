@@ -1,0 +1,49 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>User:</strong>
+  <%= @scorecard_template.user_id %>
+</p>
+
+<p>
+  <strong>Course:</strong>
+  <%= @scorecard_template.course_id %>
+</p>
+
+<p>
+  <strong>Tee:</strong>
+  <%= @scorecard_template.tee %>
+</p>
+
+<p>
+  <strong>Holes:</strong>
+  <%= @scorecard_template.holes %>
+</p>
+
+<p>
+  <strong>Slope:</strong>
+  <%= @scorecard_template.slope %>
+</p>
+
+<p>
+  <strong>Rating:</strong>
+  <%= @scorecard_template.rating %>
+</p>
+
+<p>
+  <strong>Pars:</strong>
+  <%= @scorecard_template.pars %>
+</p>
+
+<p>
+  <strong>Yards:</strong>
+  <%= @scorecard_template.yards %>
+</p>
+
+<p>
+  <strong>Handicaps:</strong>
+  <%= @scorecard_template.handicaps %>
+</p>
+
+<%= link_to 'Edit', edit_scorecard_template_path(@scorecard_template) %> |
+<%= link_to 'Back', scorecard_templates_path %>

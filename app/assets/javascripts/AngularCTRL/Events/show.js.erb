@@ -1,0 +1,182 @@
+var EventsShowCtrl = ['$scope','$modal','$http',
+	function($scope,$modal,$http){
+
+		var scope = $scope;
+
+		JP('EventShow');
+
+		scope.edit_mode = {};
+
+		scope.open = function(){
+
+			var modalInstance = $modal.open({
+				animation: true,
+				templateUrl: '/angularjs/templates/new_round.html',
+				controller: 'NewRoundCtrl',
+				size: null,
+				resolve: {
+					event: function () {
+						return scope.event;
+					},
+					current_user: function(){
+						return scope.$parent.current_user;
+					}
+				}
+			});
+
+			modalInstance.result.then(function (selectedItem) {
+				
+			}, function () {
+				
+			});
+
+		};
+
+		scope.hi = function(){
+			JP('LLLLL');
+		};
+
+		scope.openTeetimeGenerator = function(round){
+
+			var modalInstance = $modal.open({
+				animation: true,
+				templateUrl: '/angularjs/templates/teetime_generator.html',
+				controller: 'TeetimeGeneratorCtrl',
+				size: null,
+				windowClass: 'no-width',
+				resolve: {
+					teetimes: function(){
+						return scope.tlist[round.id]
+					},
+					event: function () {
+						return scope.event;
+					},
+					current_user: function(){
+						return scope.$parent.current_user;
+					},
+					round: function(){
+						return round;
+					}
+				}
+			});
+
+			modalInstance.result.then(function (selectedItem) {
+				
+			}, function () {
+				
+			});
+
+		};
+
+		scope.tlist = {};
+		scope.createList = function(round){
+
+			scope.tlist[round.id] = angular.copy(scope.API.teetimes);
+
+		};
+
+		scope.deleteTeetime = function(teetime){
+
+			if (!confirm('Are you sure you with to delete '+teetime.golfer.name+'\'s teetime?')){return false;}
+			teetime.delete();
+			scope.edit_mode = {};
+
+		};
+
+		scope.edit = function(teetime){
+
+			scope.edit_mode = {};
+			scope.edit_mode[teetime.id] = true;
+
+		};
+
+		scope.clearEdit = function(){
+
+			scope.edit_mode = {};
+
+		};
+
+		scope.getAvailable = function(value,round){
+
+			return $http.get('/api/v1/event_users/available.json',{
+				params: {
+					value: value,
+					event_id: scope.event.id,
+					round_id: round.id,
+					limit: 8
+				}
+			}).then(function(response){
+				return response.data.users;
+			});
+
+		};
+
+		scope.tu = {};
+		scope.createTeetime = function(round,user,model){
+
+			JP(round);
+			JP(user);
+
+			// return false;
+
+			var d = new Date(round.start_date);
+			d.setHours(7);
+			d.setMinutes(0);
+			d.setSeconds(0);
+
+			var new_teetime = model.new({
+				user_id: scope.$parent.current_user.id,
+				event_id: scope.event.id,
+				round_id: round.id,
+				golfer_id: user.id,
+				course_id: round.course.id,
+				teetime: d,
+				manual: true
+			});
+
+			new_teetime.save(function(data,error){
+
+				if (!error){
+
+					JP(data);
+
+					scope.edit_mode = {};
+					scope.edit_mode[data.id] = true;
+					scope.tu[round.id] = null;
+
+				}
+
+			});
+
+		};
+
+		scope.openScorecard = function(round,teetime){
+
+			var modalInstance = $modal.open({
+				animation: true,
+				templateUrl: '/angularjs/templates/scorecard.html',
+				controller: 'ScorecardCtrl',
+				size: null,
+				resolve: {
+					current_user: function(){
+						return scope.$parent.current_user;
+					},
+					round: function(){
+						return round;
+					},
+					teetime: function(){
+						return teetime;
+					}
+				}
+			});
+
+			modalInstance.result.then(function (selectedItem) {
+				
+			}, function () {
+				
+			});
+
+		};
+
+	}
+];

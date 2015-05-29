@@ -1,0 +1,43 @@
+<%= form_for(@course) do |f| %>
+  <% if @course.errors.any? %>
+    <alert type="danger">
+      <h2><%= pluralize(@course.errors.count, "error") %> prohibited this course from being saved:</h2>
+
+      <ul>
+      <% @course.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </alert>
+  <% end %>
+
+  <%= f.hidden_field :user_id,value: current_user.id %>
+
+  <div class="form-group">
+    <%= f.label :name %>
+    <%= f.text_field :name,class: 'form-control' %>
+  </div>
+  <div class="form-group">
+    <%= f.label :address %>
+    <%= f.text_field :address,class: 'form-control' %>
+  </div>
+  <div class="form-group">
+    <%= f.label :city %>
+    <%= f.text_field :city,class: 'form-control' %>
+  </div>
+  <div class="form-group">
+    <%= f.label :state %>
+    <%= f.text_field :state,class: 'form-control' %>
+  </div>
+  <div class="form-group">
+    <%= f.label :country %>
+    <%= f.text_field :country,class: 'form-control' %>
+  </div>
+  <div class="form-group">
+    <%= f.label :zip %>
+    <%= f.text_field :zip,class: 'form-control' %>
+  </div>
+  <div class="actions">
+    <%= f.submit 'Submit',class: 'btn btn-default' %>
+  </div>
+<% end %>

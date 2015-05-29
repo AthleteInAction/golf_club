@@ -1,0 +1,37 @@
+<%= form_for(@teetime) do |f| %>
+  <% if @teetime.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@teetime.errors.count, "error") %> prohibited this teetime from being saved:</h2>
+
+      <ul>
+      <% @teetime.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :user_id %><br>
+    <%= f.number_field :user_id %>
+  </div>
+  <div class="field">
+    <%= f.label :event_id %><br>
+    <%= f.number_field :event_id %>
+  </div>
+  <div class="field">
+    <%= f.label :course_id %><br>
+    <%= f.number_field :course_id %>
+  </div>
+  <div class="field">
+    <%= f.label :golfer_id %><br>
+    <%= f.number_field :golfer_id %>
+  </div>
+  <div class="field">
+    <%= f.label :teetime %><br>
+    <%= f.time_select :teetime %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

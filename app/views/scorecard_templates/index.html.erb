@@ -1,0 +1,97 @@
+<ol class="breadcrumb">
+  <li>
+    <%= link_to 'Home',root_path %>
+  </li>
+  <li>
+    <%= link_to 'Courses',courses_path %>
+  </li>
+  <li class="active"><%= @course.name %></li>
+</ol>
+
+    <ul class="list-group t20">
+      <li class="list-group-item active">
+        <%= @course.name %>
+      </li>
+      <li class="list-group-item">
+        <%= @course.address %><br>
+        <%= @course.city %>, <%= @course.state %> <%= @course.country %><br>
+        <%= @course.zip %><br><br>
+        <%= link_to edit_course_path(@course),class: 'btn btn-warning btn-xs' do %>
+          <%= icon :edit %>&nbsp;Edit
+        <% end %>
+      </li>
+    </ul>
+
+    <table class="table table-hover table-striped table-bordered t20">
+
+      <thead>
+        <tr>
+          <th class="clearfix">
+            <div class="pull-left">Scorecards</div>
+            <%= link_to new_course_scorecard_template_path,class: 'btn btn-success btn-xs pull-right' do %>
+              <%= icon :plus %>&nbsp;New
+            <% end %>
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @scorecard_templates.each do |scorecard| %>
+        <tr>
+          <td>
+            
+            <table class="table table-bordered no-bottom scorecard">
+              <tr class="<%= scorecard.tee %>">
+                <td><b><%= scorecard.tee.capitalize %></b></td>
+                <% scorecard.holes.times do |i| %>
+                <td> 
+                  <%= scorecard.yards.split(',')[i] %>
+                </td>
+                <% end %>
+              </tr>
+              <tr class="info">
+                <td><b>Handicap</b></td>
+                <% scorecard.holes.times do |i| %>
+                <td> 
+                  <%= scorecard.handicaps.split(',')[i] %>
+                </td>
+                <% end %>
+              </tr>
+              <tr>
+                <td><b>Hole</b></td>
+                <% scorecard.holes.times do |i| %>
+                <td> 
+                  <%= i+1 %>
+                </td>
+                <% end %>
+              </tr>
+              <tr class="success">
+                <td><b>Par</b></td>
+                <% scorecard.holes.times do |i| %>
+                <td> 
+                  <b><%= scorecard.pars.split(',')[i] %></b>
+                </td>
+                <% end %>
+              </tr>
+              <tr>
+                <td colspan="19" class="clearfix">
+                  <div class="pull-left">
+                    <b>Rating:</b>&nbsp;<%= scorecard.rating %>&nbsp;&nbsp;/&nbsp;&nbsp;<b>Slope:</b>&nbsp;<%= scorecard.slope %>
+                  </div>
+                  <div class="pull-right">
+                    <%= link_to edit_course_scorecard_template_path(@course,scorecard),class: 'btn btn-warning btn-xs' do %>
+                      <%= icon :edit %>&nbsp;Edit
+                    <% end %>
+                    <%= link_to course_scorecard_template_path(@course,scorecard), method: :delete, data: { confirm: 'Are you sure?' },class: 'btn btn-danger btn-xs' do %>
+                      <%= icon 'remove-circle' %>&nbsp;Delete
+                    <% end %>
+                  </div>
+                </td>
+              </tr>
+            </table>
+
+          </td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>

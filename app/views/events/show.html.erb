@@ -1,0 +1,154 @@
+<div ng:controller="EventsShowCtrl">
+
+<span ng:init="event = <%= @event.to_json %>"></span>
+
+<ol class="breadcrumb">
+  <li>
+    <%= link_to 'Home',root_path %>
+  </li>
+  <li>
+    <%= link_to 'Events',events_path %>
+  </li>
+  <li class="active"><%= @event.title %></li>
+</ol>
+
+<p>
+  <strong>Title:</strong>
+  <%= @event.title %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @event.description %>
+</p>
+
+<p>
+  <strong>Start date:</strong>
+  <%= @event.start_date.strftime('%A, %b %-d, %Y %l:%M %p %Z') %>
+</p>
+
+<p>
+  <strong>End date:</strong>
+  <%= @event.end_date.strftime('%A, %b %-d, %Y %l:%M %p %Z') %>
+</p>
+
+<span ng:init="API.event_users.get({event_id: <%= @event.id %>})"></span>
+<span ng:init="API.rounds.get({event_id: <%= @event.id %>,order: 'start_date'})"></span>
+
+<p>
+  <button class="btn btn-success btn-sm" ng:click="open()">
+    <span class="glyphicon glyphicon-plus"></span> New Round
+  </button>
+</p>
+
+<script type="text/ng-template" id="new_teetime_type.html">
+<a>
+  <span bind-html-unsafe="match.label | typeaheadHighlight:query"></span>
+  <div class="subtitle text-muted">{{match.model.email}}</div>
+</a>
+</script>
+
+<tabset>
+
+  <tab heading="Participants">
+    <table class="table table-hover table-striped table-bordered no-top outside">
+
+      <thead>
+        <tr>
+          <th>Name</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr class="" ng:repeat="eu in API.event_users.list" ng:class="{'success':eu.user.id == current_user.id}">
+          <td>{{eu.user.name}}</td>
+        </tr>
+      </tbody>
+
+    </table>
+  </tab>
+
+  <tab ng:repeat="round in API.rounds.list | orderBy:'start_date'" heading="Round {{($index+1)}}: {{round.course.name}}">
+
+    <span ng:init="createList(round)"></span>
+    <span ng:init="tlist[round.id].get({event_id: event.id,round_id: round.id,order: 'teetime'})"></span>
+
+    <table class="table table-hover table-striped table-bordered no-top outside">
+
+      <!-- <thead>
+        <tr>
+          <td colspan="5">
+            <ul class="list-group">
+              <li class="list-group-item active">{{round.course.name}}</li>
+              <li class="list-group-item">
+                {{round.course.address}}<br>
+                {{round.course.city}}, {{round.course.state}}, {{round.course.country}}<br>
+                {{round.course.zip}}<br>
+                <a href="https://www.google.com/maps/place/{{round.course.address}}+{{round.course.city}}+{{round.course.state}}+{{round.course.country}}+{{round.course.zip}}" target="_blank">Google Maps</a>
+              </li>
+            </ul>
+          </td>
+        </tr>
+      </thead> -->
+
+      <thead>
+        <tr>
+          <td colspan="5">
+            <label>Add Teetime:</label>
+            <input type="text" ng:model="tu[round.id]" typeahead="user as user.name for user in getAvailable($viewValue,round)" typeahead-loading="isLoading" typeahead-on-select="createTeetime(round,tu[round.id],tlist[round.id])" typeahead-editable="false" typeahead-template-url="new_teetime_type.html" class="form-control" placeholder="Search Members" />
+          </td>
+        </tr>
+        <tr>
+          <th width="170">Name</th>
+          <th width="100">Locked</th>
+          <th>Score</th>
+          <th>Thru</th>
+          <th class="clearfix">
+            <button class="btn btn-success pull-right" ng:click="openTeetimeGenerator(round)">Generate&nbsp;Teetimes</button>
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr ng:if="tlist[round.id].list.length == 0">
+          <td colspan="5">No teetimes have been set. <a href="" ng:click="openTeetimeGenerator(round)">Click here to generate teetimes.</a></td>
+        </tr>
+        <tr ng:repeat="teetime in tlist[round.id].list | orderBy:['to_par','teetime']" ng:class="{'success':teetime.golfer.id == current_user.id}">
+          <td>{{teetime.golfer.name}}</td>
+          <td>
+            <input type="checkbox" ng:model="teetime.manual" ng:change="teetime.update({manual: teetime.manual})" />
+          </td>
+          <td>
+            <!-- <span ng:if="teetime.thru == 0">--</span> -->
+            <!-- <span ng:if="teetime.thru > 0"> -->
+              <span ng:if="teetime.to_par == 0">E</span>
+              <span ng:if="teetime.to_par != 0">
+                <span ng:if="teetime.to_par>0">+</span>{{teetime.to_par}}
+              </span>
+            <!-- </span> -->
+          </td>
+          <td>
+            <div ng:if="teetime.thru == 0">
+              <timepicker ng:if="edit_mode[teetime.id]" ng-model="teetime.teetime" ng:change="teetime.update({teetime: teetime.teetime,manual: true})" hour-step="1" minute-step="5" show-meridian="true"></timepicker>
+              <span ng:if="!edit_mode[teetime.id]">{{moment(teetime.teetime).format('h:mm A z')}}</span>
+            </div>
+            <span ng:if="teetime.thru > 0">{{teetime.thru}}</span>
+          </td>
+          <td width="1" align="right">
+            <button ng:if="!edit_mode[teetime.id]" class="btn btn-primary btn-xs" ng:click="openScorecard(round,teetime)"><%= icon 'list-alt' %>&nbsp;Scorecard</button>
+            <button ng:if="edit_mode[teetime.id]" class="btn btn-danger btn-xs" ng:click="deleteTeetime(teetime);"><span class="glyphicon glyphicon-remove-circle"></span>&nbsp;Delete</button>
+            <button ng:if="edit_mode[teetime.id]" class="btn btn-default btn-xs" ng:click="clearEdit()"><span class="glyphicon glyphicon-ok-circle"></span>&nbsp;Done</button>
+            <button ng:if="!edit_mode[teetime.id] && teetime.thru == 0" class="btn btn-warning btn-xs" ng:click="edit(teetime)"><span class="glyphicon glyphicon-edit"></span>&nbsp;Edit</button>
+          </td>
+        </tr>
+      </tbody>
+
+    </table>
+
+  </tab>
+
+</tabset>
+
+<%= button_to 'Un-Register',"#{event_register_path(@event)}/#{@event_user.id}",method: :delete,class: 'btn btn-danger' if @is_registered %>
+<%= button_to 'Register',event_register_path(@event),class: 'btn btn-success' if !@is_registered %>
+</div>

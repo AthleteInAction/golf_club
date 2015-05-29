@@ -1,0 +1,85 @@
+<%= form_for [@course,@scorecard_template] do |f| %>
+  <% if @scorecard_template.errors.any? %>
+    <alert type="danger">
+      <h2><%= pluralize(@scorecard_template.errors.count, "error") %> prohibited this scorecard_template from being saved:</h2>
+
+      <ul>
+      <% @scorecard_template.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </alert>
+  <% end %>
+
+  <% @prev = ScorecardTemplate.where(course_id: @course.id).limit(1).order('-id').first %>
+
+  <span ng:init="scorecard.holes = <%= @scorecard_template.holes || 18 %>"></span>
+  <span ng:init="scorecard.yards = <%= (@scorecard_template.yards || '').split(',') %>"></span>
+
+  <% if @prev && !@scorecard_template.pars %>
+    <span ng:init="scorecard.pars = <%= (@scorecard_template.pars || @prev.pars).split(',') %>"></span>
+  <% else %>
+    <span ng:init="scorecard.pars = <%= (@scorecard_template.pars || '').split(',') %>"></span>
+  <% end %>
+  <% if @prev && !@scorecard_template.handicaps %>
+    <span ng:init="scorecard.handicaps = <%= (@scorecard_template.handicaps || @prev.handicaps).split(',') %>"></span>
+  <% else %>
+    <span ng:init="scorecard.handicaps = <%= (@scorecard_template.handicaps || '').split(',') %>"></span>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :tee %>
+    <%= f.select :tee,TEE.map { |t| [t.capitalize,t] },{},class: 'form-control' %>
+  </div>
+  <div class="form-group">
+    <%= f.label :holes %>
+    <%= f.select :holes,[['18 Holes',18],['9 Holes',9]],{},class: 'form-control','ng:model' => 'scorecard.holes' %>
+  </div>
+  <div class="form-group">
+    <%= f.label :rating %>
+    <%= f.text_field :rating,class: 'form-control' %>
+  </div>
+  <div class="form-group">
+    <%= f.label :slope %>
+    <%= f.number_field :slope,class: 'form-control' %>
+  </div>
+
+  <table class="table table-striped table-bordered scorecard table-hover">
+    <thead>
+      <tr>
+        <th><b>Hole</b></th>
+        <th class="warning"><b>Yards</b></th>
+        <th class="info"><b>Handicap</b></th>
+        <th class="success"><b>Par</b></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng:repeat="i in times(scorecard.holes) track by $index">
+        <td><b>{{$index+1}}</b></td>
+        <td class="warning">
+          <input type="text" tabindex="{{$index+5}}" class="form-control input-sm text-center" ng:model="scorecard.yards[$index]" />
+        </td>
+        <td class="info">
+          <input type="text" tabindex="{{($index+scorecard.holes)+5}}" class="form-control input-sm text-center" ng:model="scorecard.handicaps[$index]" />
+        </td>
+        <td class="success">
+          <input type="text" tabindex="{{($index+(scorecard.holes*2)+5)}}" class="form-control input-sm text-center" ng:model="scorecard.pars[$index]" />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <%= f.hidden_field :yards,value: "{{scorecard.yards.join(',')}}" %>
+  <%= f.hidden_field :handicaps,value: "{{scorecard.handicaps.join(',')}}" %>
+  <%= f.hidden_field :pars,value: "{{scorecard.pars.join(',')}}" %>
+
+  <div class="actions">
+    <%= f.submit 'Submit',class: 'btn btn-default' %>
+  </div>
+<% end %>
+
+<nav>
+  <ul class="pager">
+    <li><a href="<%= course_path(@course) %>">&larr;Back</a></li>
+  </ul>
+</nav>

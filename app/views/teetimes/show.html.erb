@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>User:</strong>
+  <%= @teetime.user_id %>
+</p>
+
+<p>
+  <strong>Event:</strong>
+  <%= @teetime.event_id %>
+</p>
+
+<p>
+  <strong>Course:</strong>
+  <%= @teetime.course_id %>
+</p>
+
+<p>
+  <strong>Golfer:</strong>
+  <%= @teetime.golfer_id %>
+</p>
+
+<p>
+  <strong>Teetime:</strong>
+  <%= @teetime.teetime %>
+</p>
+
+<%= link_to 'Edit', edit_teetime_path(@teetime) %> |
+<%= link_to 'Back', teetimes_path %>

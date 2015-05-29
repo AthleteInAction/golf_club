@@ -1,0 +1,37 @@
+<ol class="breadcrumb">
+  <li>
+    <%= link_to 'Home',root_path %>
+  </li>
+  <li>
+    <%= link_to 'Events',events_path %>
+  </li>
+  <li>
+    <%= link_to @event.title,@event %>
+  </li>
+  <li class="active">Tee Times</li>
+</ol>
+
+<table class="table table-hover table-bordered table-striped">
+  <thead>
+    <tr>
+      <th>Golfer</th>
+      <th>Event</th>
+      <th>Course</th>
+      <th>Teetime</th>
+      <th colspan="2"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @teetimes.each do |teetime| %>
+      <tr>
+        <td><%= teetime.golfer_id %></td>
+        <td><%= teetime.event_id %></td>
+        <td><%= teetime.course_id %></td>
+        <td><%= teetime.teetime %></td>
+        <td width="1"><%= link_to 'Edit', edit_teetime_path(teetime),class: 'btn btn-warning btn-sm' %></td>
+        <td width="1"><%= link_to 'Destroy', teetime, method: :delete, data: { confirm: 'Are you sure?' },class: 'btn btn-danger btn-sm' %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

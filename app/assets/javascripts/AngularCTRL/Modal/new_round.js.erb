@@ -1,0 +1,104 @@
+var NewRoundCtrl = ['$scope','API','$modal','event','current_user','$modalInstance','$http',
+	function($scope,API,$modal,event,current_user,$modalInstance,$http){
+
+		var scope = $scope;
+
+		scope.API = API;
+
+		JP('NEW ROUND');
+
+		scope.event = event;
+		scope.current_user = current_user;
+
+		scope.round = API.rounds.new({event_id: scope.event.id,user_id: scope.current_user.id});
+
+		scope.submitted = false;
+		scope.roundForm = function(){
+
+			scope.submitted = true;
+
+			if (scope.round_form.$valid){
+
+				JP('VALID');
+
+				scope.round.save(function(data,error){
+
+					if (!error){
+						$modalInstance.dismiss('cancel');
+					} else {
+
+					}
+
+				});
+
+			} else {
+
+				JP('IN-VALID');
+
+			};
+
+		};
+
+		scope.close = function(){
+
+			$modalInstance.dismiss('cancel');
+
+		};
+
+		scope.getLocation = function(value){
+
+			return $http.get('/api/v1/courses.json',{
+				params: {
+					name: '*'+value+'*',
+					limit: 8
+				}
+			}).then(function(response){
+				return response.data.courses.map(function(item){
+					return item;
+				});
+			});
+
+		};
+
+		scope.selectedCourse = null;
+		scope.setCourse = function(course){
+
+			scope.round.course_id = course.id;
+			scope.selectedCourse = angular.copy(course);
+			scope.course = null;
+
+		};
+
+		scope.removeCourse = function(){
+
+			delete scope.round.course_id;
+			scope.selectedCourse = null;
+			scope.course = null;
+
+		};
+
+		scope.today = function() {
+			scope.round.start_date = new Date();
+		};
+
+		scope.clear = function () {
+			delete scope.round.start_date;
+		};
+
+		scope.open = function($event){
+			
+			$event.preventDefault();
+			$event.stopPropagation();
+
+			scope.opened = true;
+
+		};
+
+		scope.sName = function(course){
+
+			return course.name+' '+course.city+', '+course.state;
+
+		};
+
+	}
+];

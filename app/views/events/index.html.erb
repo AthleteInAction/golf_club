@@ -1,0 +1,39 @@
+<ol class="breadcrumb">
+  <li>
+    <%= link_to 'Home',root_path %>
+  </li>
+  <li class="active">Events</li>
+</ol>
+
+<tabset>
+  <tab heading="Events">
+
+    <table class="table table-hover table-bordered table-striped no-top outside">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Start</th>
+          <th>End</th>
+          <th colspan="2"></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @events.each do |event| %>
+        <tr>
+          <td><%= link_to event.title,event %></td>
+          <td>
+            <%= event.start_date.strftime('%A, %b %-d, %Y %l:%M %p %Z') %>
+          </td>
+          <td>
+            <%= event.end_date.strftime('%A, %b %-d, %Y %l:%M %p %Z') %>
+          </td>
+          <td width="1"><%= link_to 'Edit', edit_event_path(event),class: 'btn btn-warning btn-sm' %></td>
+          <td width="1"><%= link_to 'Destroy', event, method: :delete, data: { confirm: 'Are you sure?' },class: 'btn btn-danger btn-sm' %></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+  </tab>
+</tabset>
