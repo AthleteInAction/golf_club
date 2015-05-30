@@ -68,7 +68,7 @@
     </table>
   </tab>
 
-  <tab ng:repeat="round in API.rounds.list | orderBy:'start_date'" heading="Round {{($index+1)}}" ng:click="API.teetimes.list = [];API.teetimes.get({event_id: event.id,round_id: round.id,order: 'teetime'})">
+  <tab ng:repeat="round in API.rounds.list | orderBy:'start_date'" heading="Round {{($index+1)}}" ng:click="API.teetimes.list = [];API.teetimes.get({round_id: round.id})">
 
     <!-- <span ng:init="tlist[round.id].get({event_id: event.id,round_id: round.id,order: 'teetime'})"></span> -->
 
@@ -118,22 +118,22 @@
         <tr ng:if="API.teetimes.list.length == 0">
           <td colspan="5">No teetimes have been set. <a href="" ng:click="openTeetimeGenerator(round)">Click here to generate teetimes.</a></td>
         </tr>
-        <tr ng:repeat="teetime in API.teetimes.list | orderBy:['to_par','teetime']" ng:class="{'success':teetime.golfer.id == current_user.id}">
-          <td>{{teetime.golfer.name}}</td>
+        <tr ng:repeat="teetime in API.teetimes.list | orderBy:['to_par','teetime']" ng:class="{'success':teetime.golfer_id == current_user.id}">
+          <td>{{teetime.name}}</td>
           <td>
             <input type="checkbox" ng:model="teetime.manual" ng:change="teetime.update({manual: teetime.manual})" />
           </td>
           <td>
-            <!-- <span ng:if="teetime.thru == 0">--</span> -->
-            <!-- <span ng:if="teetime.thru > 0"> -->
+            <span ng:if="!teetime.thru || teetime.thru == 0">--</span>
+            <span ng:if="teetime.thru > 0">
               <span ng:if="teetime.to_par == 0">E</span>
               <span ng:if="teetime.to_par != 0" class="" ng:class="{'text-danger':teetime.to_par<0}">
                 <span ng:if="teetime.to_par>0">+</span>{{teetime.to_par}}
               </span>
-            <!-- </span> -->
+            </span>
           </td>
           <td>
-            <div ng:if="teetime.thru == 0">
+            <div ng:if="!teetime.thru || teetime.thru == 0">
               <timepicker ng:if="edit_mode[teetime.id]" ng-model="teetime.teetime" ng:change="teetime.update({teetime: teetime.teetime,manual: true})" hour-step="1" minute-step="5" show-meridian="true"></timepicker>
               <span ng:if="!edit_mode[teetime.id]">{{moment(teetime.teetime).format('h:mm A z')}}</span>
             </div>
@@ -144,7 +144,7 @@
             <button ng:if="!edit_mode[teetime.id]" class="btn btn-primary btn-xs" ng:click="openScorecard(round,teetime)"><%= icon 'list-alt' %>&nbsp;Scorecard</button>
             <button ng:if="edit_mode[teetime.id]" class="btn btn-danger btn-xs" ng:click="deleteTeetime(teetime);"><span class="glyphicon glyphicon-remove-circle"></span>&nbsp;Delete</button>
             <button ng:if="edit_mode[teetime.id]" class="btn btn-default btn-xs" ng:click="clearEdit()"><span class="glyphicon glyphicon-ok-circle"></span>&nbsp;Done</button>
-            <button ng:if="!edit_mode[teetime.id] && teetime.thru == 0" class="btn btn-warning btn-xs" ng:click="edit(teetime)"><span class="glyphicon glyphicon-edit"></span>&nbsp;Edit</button>
+            <button ng:if="!edit_mode[teetime.id] && (teetime.thru == 0 || !teetime.thru)" class="btn btn-warning btn-xs" ng:click="edit(teetime)"><span class="glyphicon glyphicon-edit"></span>&nbsp;Edit</button>
           </td>
         </tr>
       </tbody>
@@ -170,7 +170,15 @@
         <tr ng:repeat="score in leaderboard">
           <td>{{$index+1}}</td>
           <td>{{score.name}}</td>
-          <td class="text-center" ng:class="{'text-danger':score.to_par<0}">{{score.to_par}}</td>
+          <td class="text-center" ng:class="{'text-danger':score.to_par<0}">
+            <span ng:if="!score.thru || score.thru == 0">--</span>
+            <span ng:if="score.thru > 0">
+              <span ng:if="score.to_par == 0">E</span>
+              <span ng:if="score.to_par != 0">
+                <span ng:if="score.to_par>0">+</span>{{score.to_par}}
+              </span>
+            </span>
+          </td>
           <td class="text-center">{{score.thru}}</td>
         </tr>
       </tbody>

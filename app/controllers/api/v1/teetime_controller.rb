@@ -11,23 +11,47 @@ module Api
   		# =================================================
   		def index
 
-        q = Tools.query params
+        # q = Tools.query params
 
-        @teetimes = Teetime.where(q)
-        .page(params[:page])
-        .per((params[:limit] || 100).to_i)
-        .order(params[:order])
+        # @teetimes = Teetime.where(q)
+        # .page(params[:page])
+        # .per((params[:limit] || 100).to_i)
+        # .order(params[:order])
 
-        respond_with @teetimes,
-        root: :teetimes,
-        meta: {
-          current_page: @teetimes.current_page,
-          next_page: @teetimes.next_page,
-          prev_page: @teetimes.prev_page,
-          total_pages: @teetimes.total_pages,
-          total_count: @teetimes.total_count,
-          limit: (params[:limit].to_i || 100).to_i
-        }
+        # respond_with @teetimes,
+        # root: :teetimes,
+        # meta: {
+        #   current_page: @teetimes.current_page,
+        #   next_page: @teetimes.next_page,
+        #   prev_page: @teetimes.prev_page,
+        #   total_pages: @teetimes.total_pages,
+        #   total_count: @teetimes.total_count,
+        #   limit: (params[:limit].to_i || 100).to_i
+        # }
+
+        q = <<-SQL
+        select
+          teetimes.id,
+          users.id as golfer_id,
+          SUM(scores.score) as score,
+          SUM(scores.par) as par,
+          (SUM(scores.score)-SUM(scores.par)) as to_par,
+          MAX(scores.hole) as thru,
+          teetimes.teetime,
+          teetimes.manual,
+          users.name,
+          users.email,
+          users.access
+        from teetimes
+        left join scores on scores.teetime_id = teetimes.id
+        join users on users.id = teetimes.golfer_id
+        where teetimes.round_id = #{params[:round_id]}
+        group by teetimes.golfer_id
+        SQL
+
+        @teetimes = Teetime.find_by_sql q
+
+        render json: {teetimes: @teetimes},serializer: false
 
   		end
   		# =================================================

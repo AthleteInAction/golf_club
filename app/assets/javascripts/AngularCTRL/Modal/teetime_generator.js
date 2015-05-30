@@ -35,7 +35,7 @@ var TeetimeGeneratorCtrl = ['$scope','API','$modal','event','current_user','roun
 					JP(error);
 					JP(data);
 					if (!error){
-						teetimes.get({event_id: event.id,round_id: round.id});
+						teetimes.get({round_id: round.id});
 						$modalInstance.dismiss('cancel');
 					}
 				});
