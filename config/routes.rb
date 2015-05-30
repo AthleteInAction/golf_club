@@ -40,6 +40,7 @@ Rails.application.routes.draw do
       get 'event_users/available',to: 'event_user#available'
 
       # API INSERT
+      get 'scores/leaderboard',to: 'score#leaderboard'
 			resources :score,path: 'scores'
 			resources :teetime,path: 'teetimes' do
 

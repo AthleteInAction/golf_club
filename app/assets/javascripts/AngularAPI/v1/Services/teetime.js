@@ -119,6 +119,7 @@ angular.module('TeetimeModule',['ApiModelV1Module'])
 			t.input = params;
 
 			t.loading.get = true;
+			JP(t.loading.get);
 
 			var options = {
 				one: 'teetimes'

@@ -12,12 +12,6 @@ module Api
   		def index
 
         q = Tools.query params
-        
-        # @teetimes = Teetime.where(q)
-        # .page(params[:page])
-        # .per((params[:limit] || 100).to_i)
-        # .order("(golfer_id = #{current_user.id}) DESC")
-        # .order(params[:order]) if !current_user.nil?
 
         @teetimes = Teetime.where(q)
         .page(params[:page])

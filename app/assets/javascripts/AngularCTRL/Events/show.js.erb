@@ -68,13 +68,6 @@ var EventsShowCtrl = ['$scope','$modal','$http',
 
 		};
 
-		scope.tlist = {};
-		scope.createList = function(round){
-
-			scope.tlist[round.id] = angular.copy(scope.API.teetimes);
-
-		};
-
 		scope.deleteTeetime = function(teetime){
 
 			if (!confirm('Are you sure you with to delete '+teetime.golfer.name+'\'s teetime?')){return false;}
@@ -113,11 +106,6 @@ var EventsShowCtrl = ['$scope','$modal','$http',
 
 		scope.tu = {};
 		scope.createTeetime = function(round,user,model){
-
-			JP(round);
-			JP(user);
-
-			// return false;
 
 			var d = new Date(round.start_date);
 			d.setHours(7);
@@ -174,6 +162,25 @@ var EventsShowCtrl = ['$scope','$modal','$http',
 				
 			}, function () {
 				
+			});
+
+		};
+
+		scope.leaderboard = [];
+		scope.getLeaderboard = function(){
+
+			$http.get('/api/v1/scores/leaderboard.json',{
+				params: {
+					event_id: scope.event.id
+				}
+			}).then(function(response){
+				
+				if (response.status == 200){
+
+					scope.leaderboard = response.data.leaderboard;
+
+				}
+
 			});
 
 		};

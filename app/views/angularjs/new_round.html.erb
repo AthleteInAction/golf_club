@@ -38,7 +38,7 @@
 	<div class="form-group" ng:if="selectedCourse">
 
 		<label>Tee:</label>
-		<select class="form-control" ng:model="round.scorecard_id" ng:init="round.scorecard_id = selectedCourse.scorecard_templates[0].id">
+		<select class="form-control capitalize" ng:model="round.scorecard_id" ng:init="round.scorecard_id = selectedCourse.scorecard_templates[0].id">
 			<option ng:repeat="scorecard in selectedCourse.scorecard_templates" value="{{scorecard.id}}">{{scorecard.tee}}</option>
 		</select>
 

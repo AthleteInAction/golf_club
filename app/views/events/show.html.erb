@@ -68,10 +68,9 @@
     </table>
   </tab>
 
-  <tab ng:repeat="round in API.rounds.list | orderBy:'start_date'" heading="Round {{($index+1)}}: {{round.course.name}}">
+  <tab ng:repeat="round in API.rounds.list | orderBy:'start_date'" heading="Round {{($index+1)}}" ng:click="API.teetimes.list = [];API.teetimes.get({event_id: event.id,round_id: round.id,order: 'teetime'})">
 
-    <span ng:init="createList(round)"></span>
-    <span ng:init="tlist[round.id].get({event_id: event.id,round_id: round.id,order: 'teetime'})"></span>
+    <!-- <span ng:init="tlist[round.id].get({event_id: event.id,round_id: round.id,order: 'teetime'})"></span> -->
 
     <table class="table table-hover table-striped table-bordered no-top outside">
 
@@ -95,7 +94,7 @@
         <tr>
           <td colspan="5">
             <label>Add Teetime:</label>
-            <input type="text" ng:model="tu[round.id]" typeahead="user as user.name for user in getAvailable($viewValue,round)" typeahead-loading="isLoading" typeahead-on-select="createTeetime(round,tu[round.id],tlist[round.id])" typeahead-editable="false" typeahead-template-url="new_teetime_type.html" class="form-control" placeholder="Search Members" />
+            <input type="text" ng:model="tu[round.id]" typeahead="user as user.name for user in getAvailable($viewValue,round)" typeahead-loading="isLoading" typeahead-on-select="createTeetime(round,tu[round.id],API.teetimes)" typeahead-editable="false" typeahead-template-url="new_teetime_type.html" class="form-control" placeholder="Search Members" ng:disabled="API.teetimes.loading.get" />
           </td>
         </tr>
         <tr>
@@ -104,16 +103,22 @@
           <th>Score</th>
           <th>Thru</th>
           <th class="clearfix">
-            <button class="btn btn-success pull-right" ng:click="openTeetimeGenerator(round)">Generate&nbsp;Teetimes</button>
+            <button class="btn btn-success pull-right" ng:click="openTeetimeGenerator(round)" ng:disabled="API.teetimes.loading.get">Generate&nbsp;Teetimes</button>
           </th>
         </tr>
       </thead>
 
-      <tbody>
-        <tr ng:if="tlist[round.id].list.length == 0">
+      <tbody ng:if="API.teetimes.loading.get">
+        <tr>
+          <td colspan="5">Loading...</td>
+        </tr>
+      </tbody>
+
+      <tbody ng:if="!API.teetimes.loading.get">
+        <tr ng:if="API.teetimes.list.length == 0">
           <td colspan="5">No teetimes have been set. <a href="" ng:click="openTeetimeGenerator(round)">Click here to generate teetimes.</a></td>
         </tr>
-        <tr ng:repeat="teetime in tlist[round.id].list | orderBy:['to_par','teetime']" ng:class="{'success':teetime.golfer.id == current_user.id}">
+        <tr ng:repeat="teetime in API.teetimes.list | orderBy:['to_par','teetime']" ng:class="{'success':teetime.golfer.id == current_user.id}">
           <td>{{teetime.golfer.name}}</td>
           <td>
             <input type="checkbox" ng:model="teetime.manual" ng:change="teetime.update({manual: teetime.manual})" />
@@ -122,7 +127,7 @@
             <!-- <span ng:if="teetime.thru == 0">--</span> -->
             <!-- <span ng:if="teetime.thru > 0"> -->
               <span ng:if="teetime.to_par == 0">E</span>
-              <span ng:if="teetime.to_par != 0">
+              <span ng:if="teetime.to_par != 0" class="" ng:class="{'text-danger':teetime.to_par<0}">
                 <span ng:if="teetime.to_par>0">+</span>{{teetime.to_par}}
               </span>
             <!-- </span> -->
@@ -132,7 +137,8 @@
               <timepicker ng:if="edit_mode[teetime.id]" ng-model="teetime.teetime" ng:change="teetime.update({teetime: teetime.teetime,manual: true})" hour-step="1" minute-step="5" show-meridian="true"></timepicker>
               <span ng:if="!edit_mode[teetime.id]">{{moment(teetime.teetime).format('h:mm A z')}}</span>
             </div>
-            <span ng:if="teetime.thru > 0">{{teetime.thru}}</span>
+            <span ng:if="teetime.thru > 0 && teetime.thru < round.scorecard.holes">{{teetime.thru}}</span>
+            <span ng:if="teetime.thru >= round.scorecard.holes">F</span>
           </td>
           <td width="1" align="right">
             <button ng:if="!edit_mode[teetime.id]" class="btn btn-primary btn-xs" ng:click="openScorecard(round,teetime)"><%= icon 'list-alt' %>&nbsp;Scorecard</button>
@@ -140,6 +146,32 @@
             <button ng:if="edit_mode[teetime.id]" class="btn btn-default btn-xs" ng:click="clearEdit()"><span class="glyphicon glyphicon-ok-circle"></span>&nbsp;Done</button>
             <button ng:if="!edit_mode[teetime.id] && teetime.thru == 0" class="btn btn-warning btn-xs" ng:click="edit(teetime)"><span class="glyphicon glyphicon-edit"></span>&nbsp;Edit</button>
           </td>
+        </tr>
+      </tbody>
+
+    </table>
+
+  </tab>
+
+  <tab heading="Leaderboard" ng:click="getLeaderboard()">
+
+    <table class="table table-hover table-striped table-bordered no-top outside">
+
+      <thead>
+        <tr>
+          <th width="1">Place</th>
+          <th>Name</th>
+          <th width="1" class="text-center">Score</th>
+          <th width="1" class="text-center">Thru</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr ng:repeat="score in leaderboard">
+          <td>{{$index+1}}</td>
+          <td>{{score.name}}</td>
+          <td class="text-center" ng:class="{'text-danger':score.to_par<0}">{{score.to_par}}</td>
+          <td class="text-center">{{score.thru}}</td>
         </tr>
       </tbody>
 

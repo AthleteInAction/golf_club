@@ -11,6 +11,11 @@ module Api
   		# =================================================
   		def index
 
+#         select SUM(scores.score) as score,SUM(scores.par) as par,(SUM(score)-SUM(scores.par)) as to_par,users.* from scores
+# JOIN users ON users.id = scores.golfer_id
+# group by users.id
+# order by to_par ASC
+
         q = Tools.query params
         
         @scores = Score.where(q)
@@ -46,6 +51,28 @@ module Api
   		end
   		# =================================================
   		# =================================================
+
+
+      def leaderboard
+
+        q = <<-SQL
+        select 
+          SUM(scores.score) as score,
+          SUM(scores.par) as par,
+          (SUM(score)-SUM(scores.par)) as to_par,
+          COUNT(scores.id) as thru,
+          users.id,users.name,users.email from scores
+        JOIN users ON users.id = scores.golfer_id
+        where scores.event_id = #{params[:event_id]}
+        group by users.id
+        order by to_par ASC,thru DESC
+        SQL
+
+        @leaderboard = Score.find_by_sql q
+
+        render json: {leaderboard: @leaderboard},serializer: false
+
+      end
 
 
   		# GET
