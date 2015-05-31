@@ -14,9 +14,10 @@
 		<div class="container-fluid">
 
 			<div class="navbar-header">
-				<a href="/" class="navbar-brand">
-					<%= image_tag 'logo.png',height: 20 %>
-				</a>
+				<%= link_to root_path,class: 'navbar-brand' do %>
+					<span><%= image_tag 'logo.png',height: 20 %></span>
+            		A Cool Golf Club
+				<% end %>
 			</div>
 
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">

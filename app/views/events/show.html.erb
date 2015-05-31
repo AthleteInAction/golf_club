@@ -12,34 +12,39 @@
   <li class="active"><%= @event.title %></li>
 </ol>
 
-<p>
-  <strong>Title:</strong>
-  <%= @event.title %>
-</p>
+<div class="page-header">
+  <h1>
+    <%= @event.title %><br>
+    <small><%= @event.start_date.strftime '%A, %b %-d, %Y %l:%M %p %Z' %></small>
+  </h1>
+</div>
 
-<p>
-  <strong>Description:</strong>
+<p class="page-description">
   <%= @event.description %>
 </p>
 
-<p>
-  <strong>Start date:</strong>
-  <%= @event.start_date.strftime('%A, %b %-d, %Y %l:%M %p %Z') %>
-</p>
-
-<p>
-  <strong>End date:</strong>
-  <%= @event.end_date.strftime('%A, %b %-d, %Y %l:%M %p %Z') %>
-</p>
+<ul class="list-group">
+  <li class="list-group-item">
+    <% if @is_registered %>
+      <%= button_to "#{event_register_path(@event)}/#{@event_user.id}",method: :delete,class: 'btn btn-danger btn-lg btn-block', data: { confirm: 'Are you sure you wish to un-register for this event?' } do %>
+        <%= icon 'open' %>&nbsp;Un-Register
+      <% end %>
+    <% else %>
+      <%= button_to event_register_path(@event),class: 'btn btn-success btn-lg btn-block' do %>
+        <%= icon 'save' %>&nbsp;Register
+      <% end %>
+    <% end %>
+  </li>
+</ul>
 
 <span ng:init="API.event_users.get({event_id: <%= @event.id %>})"></span>
 <span ng:init="API.rounds.get({event_id: <%= @event.id %>,order: 'start_date'})"></span>
 
-<p>
+<!-- <p>
   <button class="btn btn-success btn-sm" ng:click="open()">
     <span class="glyphicon glyphicon-plus"></span> New Round
   </button>
-</p>
+</p> -->
 
 <script type="text/ng-template" id="new_teetime_type.html">
 <a>
@@ -47,10 +52,16 @@
   <div class="subtitle text-muted">{{match.model.email}}</div>
 </a>
 </script>
-
+{{tabs}}
 <tabset>
 
-  <tab heading="Participants">
+  <tab>
+    
+    <tab-heading>
+      Participants
+      <span class="badge">{{API.event_users.list.length}}</span>
+    </tab-heading>
+
     <table class="table table-hover table-striped table-bordered no-top outside">
 
       <thead>
@@ -68,33 +79,54 @@
     </table>
   </tab>
 
-  <tab ng:repeat="round in API.rounds.list | orderBy:'start_date'" heading="Round {{($index+1)}}" ng:click="API.teetimes.list = [];API.teetimes.get({round_id: round.id})">
+  <tab heading="Leaderboard" ng:click="getLeaderboard()">
+
+    <table class="table table-hover table-striped table-bordered no-top outside">
+
+      <thead>
+        <tr>
+          <th width="1">Place</th>
+          <th>Name</th>
+          <th width="1" class="text-center">Score</th>
+          <th width="1" class="text-center">Thru</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr ng:repeat="score in leaderboard">
+          <td>{{$index+1}}</td>
+          <td>{{score.name}}</td>
+          <td class="text-center" ng:class="{'text-danger':score.to_par<0}">
+            <span ng:if="!score.thru || score.thru == 0">--</span>
+            <span ng:if="score.thru > 0">
+              <span ng:if="score.to_par == 0">E</span>
+              <span ng:if="score.to_par != 0">
+                <span ng:if="score.to_par>0">+</span>{{score.to_par}}
+              </span>
+            </span>
+          </td>
+          <td class="text-center">{{score.thru}}</td>
+        </tr>
+      </tbody>
+
+    </table>
+
+  </tab>
+
+  <tab ng:repeat="round in API.rounds.list | orderBy:'start_date'" ng:click="API.teetimes.list = [];API.teetimes.get({round_id: round.id})">
+
+    <tab-heading>
+      R{{($index+1)}}:&nbsp;{{round.course.name}}
+    </tab-heading>
 
     <!-- <span ng:init="tlist[round.id].get({event_id: event.id,round_id: round.id,order: 'teetime'})"></span> -->
 
     <table class="table table-hover table-striped table-bordered no-top outside">
 
-      <!-- <thead>
-        <tr>
-          <td colspan="5">
-            <ul class="list-group">
-              <li class="list-group-item active">{{round.course.name}}</li>
-              <li class="list-group-item">
-                {{round.course.address}}<br>
-                {{round.course.city}}, {{round.course.state}}, {{round.course.country}}<br>
-                {{round.course.zip}}<br>
-                <a href="https://www.google.com/maps/place/{{round.course.address}}+{{round.course.city}}+{{round.course.state}}+{{round.course.country}}+{{round.course.zip}}" target="_blank">Google Maps</a>
-              </li>
-            </ul>
-          </td>
-        </tr>
-      </thead> -->
-
       <thead>
         <tr>
           <td colspan="5">
-            <label>Add Teetime:</label>
-            <input type="text" ng:model="tu[round.id]" typeahead="user as user.name for user in getAvailable($viewValue,round)" typeahead-loading="isLoading" typeahead-on-select="createTeetime(round,tu[round.id],API.teetimes)" typeahead-editable="false" typeahead-template-url="new_teetime_type.html" class="form-control" placeholder="Search Members" ng:disabled="API.teetimes.loading.get" />
+            <input type="text" ng:model="tu[round.id]" typeahead="user as user.name for user in getAvailable($viewValue,round)" typeahead-loading="isLoading" typeahead-on-select="createTeetime(round,tu[round.id],API.teetimes)" typeahead-editable="false" typeahead-template-url="new_teetime_type.html" class="form-control" placeholder="Add Teetime" ng:disabled="API.teetimes.loading.get" />
           </td>
         </tr>
         <tr>
@@ -153,42 +185,6 @@
 
   </tab>
 
-  <tab heading="Leaderboard" ng:click="getLeaderboard()">
-
-    <table class="table table-hover table-striped table-bordered no-top outside">
-
-      <thead>
-        <tr>
-          <th width="1">Place</th>
-          <th>Name</th>
-          <th width="1" class="text-center">Score</th>
-          <th width="1" class="text-center">Thru</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr ng:repeat="score in leaderboard">
-          <td>{{$index+1}}</td>
-          <td>{{score.name}}</td>
-          <td class="text-center" ng:class="{'text-danger':score.to_par<0}">
-            <span ng:if="!score.thru || score.thru == 0">--</span>
-            <span ng:if="score.thru > 0">
-              <span ng:if="score.to_par == 0">E</span>
-              <span ng:if="score.to_par != 0">
-                <span ng:if="score.to_par>0">+</span>{{score.to_par}}
-              </span>
-            </span>
-          </td>
-          <td class="text-center">{{score.thru}}</td>
-        </tr>
-      </tbody>
-
-    </table>
-
-  </tab>
-
 </tabset>
 
-<%= button_to 'Un-Register',"#{event_register_path(@event)}/#{@event_user.id}",method: :delete,class: 'btn btn-danger' if @is_registered %>
-<%= button_to 'Register',event_register_path(@event),class: 'btn btn-success' if !@is_registered %>
 </div>
