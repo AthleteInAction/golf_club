@@ -22,12 +22,13 @@
 //= require ./AngularJS/angular-sanitize.js
 //= require ./AngularJS/angular-uploader.js
 //= require ./AngularJS/angular-number-picker.js
+//= require ./AngularJS/angular-calendar.js
 //= require ./AngularJS/ui-bootstrap-tpls-0.12.1.js
 //= require main
 //= require_tree ./AngularHelpers
 //= require_tree ./Utilities
 //= require_tree ./AngularAPI
-//= require_tree ./AngularCTRL
+//= require_tree ./AngularCTRL/Application
 
 $('document').ready(function(){
 

@@ -1,6 +1,11 @@
 class SessionsController < ApplicationController
 
+	skip_before_filter :authorize
+
 	def new
+
+		render layout: 'splash'
+		
 	end
 
 	def create

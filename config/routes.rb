@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
 
+  get 'dashboard',to: 'dashboard#index',as: 'dashboard'
+
+  get 'main/index',as: :main
+
   resources :teetimes
 
   resources :courses do
@@ -20,8 +24,8 @@ Rails.application.routes.draw do
 
   resources :users
   resources :sessions
-
-  root 'root#index'
+  
+  root 'splash#index'
 
   get '/access/normal',to: 'sessions#new',as: 'login'
   get '/access/logout',to: 'sessions#destroy',as: 'logout'

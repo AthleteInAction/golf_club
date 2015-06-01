@@ -11,5 +11,12 @@
  * file per style scope.
  *
  *= require_tree ./Bootstrap
- *= require_tree ./Application
+ *= require_tree ./Splash
  */
+body {
+	padding-top: 50px;
+	/*margin: 0 20px;*/
+}
+.FULL {
+	width: 100% !important;
+}

@@ -1,4 +1,8 @@
 class Event < ActiveRecord::Base
+
+	def to_param
+		"#{id} #{title} #{start_date.strftime('%b %-d %Y')}".parameterize
+	end
 	
 	has_many :rounds
 
