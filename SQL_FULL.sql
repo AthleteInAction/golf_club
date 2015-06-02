@@ -7,7 +7,7 @@
 #
 # Host: localhost (MySQL 5.6.19)
 # Database: golf_club
-# Generation Time: 2015-06-01 06:41:09 +0000
+# Generation Time: 2015-06-02 12:31:17 +0000
 # ************************************************************
 
 
@@ -46,7 +46,7 @@ INSERT INTO `courses` (`id`, `user_id`, `name`, `address`, `city`, `state`, `cou
 VALUES
 	(1,1,'Pebble Beach','1700 17-Mile Drive','Pebble Beach','CA','USA','93953','2015-05-24 19:00:52','2015-05-24 19:00:52'),
 	(2,20,'ullamcorper viverra.','860-7613 Vel, Ave','Meppel','Dr','India','227977',NULL,NULL),
-	(3,55,'pede. Cras','172-5573 Odio Avenue','Brandon','Manitoba','Hungary','5877',NULL,NULL),
+	(3,55,'TPC Sawgrass','110 Championship Way','Ponte Vedra Beach','FL','USA','32082',NULL,NULL),
 	(4,100,'gravida sagittis.','2660 Nulla Rd.','Southaven','MS','Lebanon','78700',NULL,NULL),
 	(5,19,'mauris a','P.O. Box 276, 8709 Nec St.','Camaragibe','PE','Angola','10119',NULL,NULL),
 	(6,56,'mauris ut','Ap #456-3580 Sed Road','Sosnowiec','Sląskie','Puerto Rico','30220',NULL,NULL),
@@ -297,7 +297,7 @@ LOCK TABLES `events` WRITE;
 
 INSERT INTO `events` (`id`, `user_id`, `course_id`, `title`, `description`, `start_date`, `end_date`, `created_at`, `updated_at`)
 VALUES
-	(2,1,1,'Charter Cities: From Idea to Implementation','Paul Romer, a prominent American economist and specialist on the theory of\ngrowth and innovation, will discuss charter cities and their potential impact on\neconomic prosperity. According to Romer, a well-run city is an engine for growth\nand collaboration among its citizens leads to a more efficient way of life.','2015-05-23 13:00:00','2015-05-24 03:00:00','2015-05-23 01:06:10','2015-05-23 01:06:10');
+	(2,1,1,'Charter Cities: From Idea to Implementation','Paul Romer, a prominent American economist and specialist on the theory of\ngrowth and innovation, will discuss charter cities and their potential impact on\neconomic prosperity. According to Romer, a well-run city is an engine for growth\nand collaboration among its citizens leads to a more efficient way of life.','2015-06-23 13:00:00','2015-05-24 03:00:00','2015-05-23 01:06:10','2015-05-23 01:06:10');
 
 /*!40000 ALTER TABLE `events` ENABLE KEYS */;
 UNLOCK TABLES;
