@@ -1,5 +1,9 @@
 class User < ActiveRecord::Base
 
+	def to_param
+		"#{id} #{name}".parameterize
+	end
+
 	has_secure_password
 	
 	validates_presence_of :name,:email

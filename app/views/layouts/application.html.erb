@@ -10,14 +10,13 @@
 </head>
 <body ng:controller="Ctrl">
 
-	<nav class="navbar navbar-inverse navbar-fixed-top">
+	<nav class="navbar navbar-default navbar-fixed-top">
 		<div class="container">
 
 			<div class="navbar-header">
 				<div class="container-fluid">
-				<%= link_to root_path,class: 'navbar-brand' do %>
+				<%= link_to dashboard_path,class: 'navbar-brand' do %>
 					<span><%= image_tag 'angularjs-shield.png',height: 20 %></span>
-            		A Cool Golf Club
 				<% end %>
 				</div>
 			</div>
@@ -26,24 +25,19 @@
 				<ul class="nav navbar-nav">
 					<li></li>
 					<li><%= link_to 'Members',users_path %></li>
+					<li><%= link_to 'Calendar',calendar_path %></li>
 					<li><%= link_to 'Events',events_path %></li>
-					<li><%= link_to 'Courses',courses_path %></li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
-					<% if current_user.nil? %>
-					<li><%= link_to 'Login', login_path %></li>
-					<li><%= link_to 'Signup', signup_path %></li>
-					<% else %>
 					<li><%= link_to current_user.email,current_user %></li>
-					<li><%= link_to 'Logout',logout_path %></li>
-					<% end %>
+					<li><%= link_to logout_path do %><%= icon 'log-out' %><% end %></li>
 				</ul>
 			</div>
 			
 		</div>
 	</nav>
 
-	<div class="container">
+	<div class="container" ng:show="loaded">
 
 		<%= yield %>
 

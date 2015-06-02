@@ -1,7 +1,13 @@
 class SignupController < ApplicationController
+
+  skip_before_filter :authorize
   
   def index
-  	@user = User.new
+  	
+    @user = User.new
+
+    render layout: 'splash'
+
   end
 
   def create
@@ -16,7 +22,7 @@ class SignupController < ApplicationController
 
     else
 
-    	render :index
+    	render :index,layout: 'splash'
 
     end
 

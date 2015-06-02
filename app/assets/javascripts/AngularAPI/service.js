@@ -14,10 +14,11 @@ App.config(['$httpProvider',function($httpProvider){
 // API
 // ======================================================================
 // ======================================================================
-angular.module('APIModule',['BlankModule','ScoreModule','TeetimeModule','GenerateModule','CourseModule','RoundModule','UserModule','Event_userModule','EventModule'])
-.service('API',['BlankSVC','ScoreSVC','TeetimeSVC','GenerateSVC','CourseSVC','RoundSVC','UserSVC','Event_userSVC','EventSVC',function(BlankSVC,ScoreSVC,TeetimeSVC,GenerateSVC,CourseSVC,RoundSVC,UserSVC,Event_userSVC,EventSVC){
+angular.module('APIModule',['BlankModule','InstagramModule','ScoreModule','TeetimeModule','GenerateModule','CourseModule','RoundModule','UserModule','Event_userModule','EventModule'])
+.service('API',['BlankSVC','InstagramSVC','ScoreSVC','TeetimeSVC','GenerateSVC','CourseSVC','RoundSVC','UserSVC','Event_userSVC','EventSVC',function(BlankSVC,InstagramSVC,ScoreSVC,TeetimeSVC,GenerateSVC,CourseSVC,RoundSVC,UserSVC,Event_userSVC,EventSVC){
 
 	// INSERT HERE
+	this.instagrams = InstagramSVC.instagrams;
 	this.scores = ScoreSVC.scores;
 	this.teetimes = TeetimeSVC.teetimes;
 	this.generate = GenerateSVC;

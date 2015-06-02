@@ -26,4 +26,12 @@ Rails.application.configure do
   # TEE's
   TEE = ['black','blue','gold','white','yellow','red']
 
+  Instagram.configure do |config|
+
+    config.client_id = 'aa32ba2129914b28b9e27c34804cf288'
+
+    config.client_secret = '5a836017b44a4e85b0bf2b309562c455'
+
+  end
+
 end

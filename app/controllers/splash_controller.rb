@@ -6,6 +6,8 @@ class SplashController < ApplicationController
 
 		if current_user.nil?
 
+			@user = User.new
+			
 			render layout: 'splash'
 
 		else

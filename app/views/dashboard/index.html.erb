@@ -1,2 +1,108 @@
-<h1>Dashboard#index</h1>
-<p>Find me in app/views/dashboard/index.html.erb</p>
+<div class="page-header">
+	<h1>A Cool Golf Club<br><small>#acoolgolfclub</small></h1>
+</div>
+
+<div class="row">
+
+	<div class="col-sm-8">
+
+		<ul class="list-group" ng:init="API.events.get({limit: 10,start_date: '>\''+date.toISOString()+'\''})">
+			<li class="list-group-item active">
+				Upcoming Events
+			</li>
+			<li class="list-group-item text-muted" ng:if="API.events.list.length == 0">No events scheduled.</li>
+			<a href="/events/{{event.slug}}" class="list-group-item" ng:repeat="event in API.events.list">
+				{{event.title}}
+				<div class="text-muted">{{moment(event.start_date).format('ddd, MMM Do, YYYY')}}</div>
+				<span ng:repeat="round in event.rounds"><span class="label label-info">{{round.course.name}}</span> </span>
+			</a>
+		</ul>
+
+	</div>
+
+	<div class="col-sm-4" ng:init="API.instagrams.get({tag: 'gopro'})">
+
+		<!-- <ul class="list-group" ng:init="API.instagrams.get({tag: 'chambersbaygolf'})">
+			<li class="list-group-item list-group-item-info">
+				Instagram
+			</li>
+			<li class="list-group-item text-center" ng:repeat="post in API.instagrams.list">
+
+				<nav class="navbar navbar-default">
+					<div class="container">
+
+						<div class="navbar-header">
+							<div class="container-fluid">
+								<a class="navbar-brand" href="#">
+									<img ng:src="{{post.user.profile_picture}}" height="20" />
+								</a>
+							</div>
+						</div>
+
+						<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+							<ul class="nav navbar-nav">
+								<li>
+									<a href="https://www.instagram.com/{{post.user.username}}" target="_blank">@{{post.user.username}}</a>
+								</li>
+							</ul>
+						</div>
+
+					</div>
+				</nav>
+				<a href="{{post.link}}" target="_blank"><img ng:src="{{post.images.low_resolution.url}}" /></a>
+				
+
+			</li>
+		</ul> -->
+
+		<!-- <ul class="list-group">
+			<li class="list-group-item list-group-item-info clearfix">
+				<span ng:if="!API.instagrams.loading.get">Instagram</span>
+				<span ng:if="API.instagrams.loading.get">Loading..</span>
+				<a href="" ng:click="API.instagrams.get({tag: 'gopro'})" class="pull-right"><%= icon :refresh %></a>
+			</li>
+		</ul>
+
+		<div class="thumbnail" ng:repeat="post in API.instagrams.list">
+			<a href="{{post.link}}" target="_blank"><img ng:src="{{post.images.standard_resolution.url}}" /></a>
+			<div class="caption">
+				<a href="https://instagram.com/{{post.user.username}}" target="_blank">
+					@{{post.user.username}}<br><span class="text-muted">{{post.user.full_name}}</span>
+				</a>
+			</div>
+		</div> -->
+		<div class="panel panel-default">
+			<!-- Default panel contents -->
+			<div class="panel-heading clearfix">
+				<span ng:if="!API.instagrams.loading.get">Instagram</span>
+				<span ng:if="API.instagrams.loading.get">Loading..</span>
+				<a href="" ng:click="API.instagrams.get({tag: 'gopro'})" class="pull-right"><%= icon :refresh %></a>
+			</div>
+			<div class="panel-body">
+				<p>Tag your Instagram photos with <span class="label label-warning">#acoolgolfclub</span> and they will appear here!</p>
+			</div>
+
+			<!-- Table -->
+			<table class="table">
+				<tbody>
+					<tr ng:repeat="post in API.instagrams.list">
+						<td>
+							
+							<div class="thumbnail no-margin-bottom">
+								<a href="{{post.link}}" target="_blank"><img ng:src="{{post.images.standard_resolution.url}}" /></a>
+								<div class="caption">
+									<a href="https://instagram.com/{{post.user.username}}" target="_blank">
+										@{{post.user.username}}<br><span class="text-muted">{{post.user.full_name}}</span>
+									</a>
+								</div>
+							</div>
+
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+	</div>
+
+</div>

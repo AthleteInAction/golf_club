@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  get 'calendar',to: 'calendar#index',as: 'calendar'
+
   get 'dashboard',to: 'dashboard#index',as: 'dashboard'
 
   get 'main/index',as: :main
@@ -30,7 +32,7 @@ Rails.application.routes.draw do
   get '/access/normal',to: 'sessions#new',as: 'login'
   get '/access/logout',to: 'sessions#destroy',as: 'logout'
   get '/access/signup',to: 'signup#index',as: 'signup'
-  post '/access/signup',to: 'signup#create'
+  post '/access/signup',to: 'signup#create',as: 'new_signup'
 
   get 'angularjs/templates/:page',to: 'angularjs#index'
 
@@ -44,6 +46,7 @@ Rails.application.routes.draw do
       get 'event_users/available',to: 'event_user#available'
 
       # API INSERT
+			resources :instagram,path: 'instagrams', only: [:index]
       get 'scores/leaderboard',to: 'score#leaderboard'
 			resources :score,path: 'scores'
 			resources :teetime,path: 'teetimes' do

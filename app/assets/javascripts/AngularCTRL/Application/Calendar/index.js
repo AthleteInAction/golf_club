@@ -16,9 +16,7 @@ var CalendarCtrl = ['$scope','API','$compile','uiCalendarConfig',
             currentTimezone: scope.$parent.timezone.name() // an option!
     };
 
-    scope.events = [
-      {title: 'This is a test!',start: new Date()}
-    ];
+    scope.events = [];
 
     API.events.get({},function(data,error){
 

@@ -32,7 +32,7 @@
           <td class="<%= 'tiny' if courses.count > 1 %>">
             <% courses.each do |name,id| %>
               <div>
-                <%= link_to course_path(id),target: '_blank' do %>
+                <%= link_to course_path(id) do %>
                   <%= name %>
                 <% end %>
               </div>

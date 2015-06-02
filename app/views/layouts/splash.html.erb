@@ -17,7 +17,7 @@
 				<div class="container-fluid">
 				<%= link_to root_path,class: 'navbar-brand' do %>
 					<span><%= image_tag 'angularjs-shield.png',height: 20 %></span>
-            		A Cool Golf Club
+            		&nbsp;&nbsp;A Cool Golf Club
 				<% end %>
 				</div>
 			</div>
@@ -25,18 +25,9 @@
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav">
 					<li></li>
-					<li><%= link_to 'Members',users_path %></li>
-					<li><%= link_to 'Events',events_path %></li>
-					<li><%= link_to 'Courses',courses_path %></li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
-					<% if current_user.nil? %>
-					<li><%= link_to 'Login', login_path %></li>
-					<li><%= link_to 'Signup', signup_path %></li>
-					<% else %>
-					<li><%= link_to current_user.email,current_user %></li>
-					<li><%= link_to 'Logout',logout_path %></li>
-					<% end %>
+					<li><%= link_to login_path do %><%= icon 'log-in' %>&nbsp;&nbsp;Log In<% end %></li>
 				</ul>
 			</div>
 			

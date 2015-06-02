@@ -8,6 +8,10 @@ var Ctrl = ['$scope','API',
 
 		scope.timezone = jstz.determine();
 
+		scope.loaded = true;
+
+		scope.date = new Date();
+
 		JP('CTRL');
 
 		scope.current_user = current_user;
