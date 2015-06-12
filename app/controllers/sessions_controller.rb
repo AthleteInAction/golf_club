@@ -22,7 +22,7 @@ class SessionsController < ApplicationController
 
 			flash[:danger] = 'Email or password is invalid'
 
-			render 'new'
+			render 'new', layout: 'splash'
 
 			flash.delete :danger
 
