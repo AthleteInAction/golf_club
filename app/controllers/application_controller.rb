@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  
+
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
@@ -24,7 +24,15 @@ class ApplicationController < ActionController::Base
 
   def authorize
 
-    redirect_to login_path, flash: {warning: 'Not authorized'} if current_user.nil?
+    if current_user.nil?
+
+      redirect_to login_path, flash: {warning: 'Not authorized'}
+
+    else
+
+      current_user.update last_active: Time.now
+
+    end
     
   end
 

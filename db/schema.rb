@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150529031501) do
+ActiveRecord::Schema.define(version: 20150612183227) do
 
   create_table "courses", force: true do |t|
     t.integer  "user_id"
@@ -102,6 +102,8 @@ ActiveRecord::Schema.define(version: 20150529031501) do
     t.integer  "access",          limit: 3
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "last_active",               default: '2015-06-12 18:34:25'
+    t.integer  "login_count",               default: 0
   end
 
 end

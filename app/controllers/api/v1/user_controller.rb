@@ -120,7 +120,7 @@ module Api
 
       def plist
 
-        list = :name, :email, :password, :password_confirmation, :created_at, :updated_at
+        list = :last_active, :login_count, :name, :email, :password, :password_confirmation, :created_at, :updated_at
         list << :access if is_admin?
         
         list
