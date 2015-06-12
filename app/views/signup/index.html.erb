@@ -2,12 +2,9 @@
 
 <div class="container">
 
-  <!-- <ol class="breadcrumb">
-    <li>
-      <%= link_to 'Home',root_path %>
-    </li>
-    <li class="active">Sign Up</li>
-  </ol> -->
+  <% flash.each do |type,message| %>
+  <alert type="<%= type %>"><%= message %></alert>
+  <% end %>
 
   <div class="row">
 

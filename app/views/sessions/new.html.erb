@@ -2,12 +2,9 @@
 
 <div class="container">
 
-	<!-- <ol class="breadcrumb">
-		<li>
-			<%= link_to 'Home',root_path %>
-		</li>
-		<li class="active">Log In</li>
-	</ol> -->
+	<% flash.each do |type,message| %>
+	<alert type="<%= type %>"><%= message %></alert>
+	<% end %>
 
 	<div class="row">
 
@@ -22,7 +19,7 @@
 				</div>
 				<div class="panel-body">
 					
-					<%= form_tag sessions_path do %>
+					<%= form_tag login_try_path do %>
 					<div class="form-group">
 						<%= text_field_tag :email, params[:email],class: 'form-control input-lg',placeholder: 'Email' %>
 					</div>

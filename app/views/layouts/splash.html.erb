@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title><%= TITLE %></title>
-  <script type="text/javascript">var current_user = <%= current_user.to_json(except: :password_digest).html_safe %>;</script>
-  <link rel="shortcut icon" href="<%= asset_path 'logo.png' %>" />
-  <%= stylesheet_link_tag    'splash', media: 'all', 'data-turbolinks-track' => true %>
-  <%= javascript_include_tag 'splash', 'data-turbolinks-track' => true %>
-  <%= csrf_meta_tags %>
+	<title><%= TITLE %></title>
+	<script type="text/javascript">var current_user = <%= current_user.to_json(except: :password_digest).html_safe %>;</script>
+	<link rel="shortcut icon" href="<%= asset_path 'logo.png' %>" />
+	<%= stylesheet_link_tag    'splash', media: 'all', 'data-turbolinks-track' => true %>
+	<%= javascript_include_tag 'splash', 'data-turbolinks-track' => true %>
+	<%= csrf_meta_tags %>
 </head>
 <body ng:controller="Ctrl">
 
@@ -15,10 +15,10 @@
 
 			<div class="navbar-header">
 				<div class="container-fluid">
-				<%= link_to root_path,class: 'navbar-brand' do %>
+					<%= link_to root_path,class: 'navbar-brand' do %>
 					<span><%= image_tag 'angularjs-shield.png',height: 20 %></span>
-            		&nbsp;&nbsp;A Cool Golf Club
-				<% end %>
+					&nbsp;&nbsp;A Cool Golf Club
+					<% end %>
 				</div>
 			</div>
 

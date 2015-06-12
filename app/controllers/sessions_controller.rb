@@ -36,7 +36,7 @@ class SessionsController < ApplicationController
 
 		reset_session if params[:reset] == 'true'
 
-		redirect_to root_url, flash: {warning: 'You have been logged out!'}
+		redirect_to root_url
 
 	end
 

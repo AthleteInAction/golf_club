@@ -25,12 +25,13 @@ Rails.application.routes.draw do
   get 'signup/index'
 
   resources :users
-  resources :sessions
   
   root 'splash#index'
 
   get '/access/normal',to: 'sessions#new',as: 'login'
+  post '/access/normal',to: 'sessions#create',as: 'login_try'
   get '/access/logout',to: 'sessions#destroy',as: 'logout'
+
   get '/access/signup',to: 'signup#index',as: 'signup'
   post '/access/signup',to: 'signup#create',as: 'new_signup'
 
